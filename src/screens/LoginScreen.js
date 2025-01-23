@@ -17,9 +17,12 @@ export default function LoginScreen({ navigation }) {
             setError('Error al iniciar sesión: ' + error.message);
         }
     };
-    const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-        return passwordRegex.test(password);
+   
+    //Validacion de formato de email y contraseña que no este vacia 
+    const validateLoginForm = () => {
+        const isEmailValid = /\S+@\S+\.\S+/.test(email);
+        const isPasswordValid = password.length > 0;
+        return isEmailValid && isPasswordValid;
     };
 
     return (
@@ -41,6 +44,7 @@ export default function LoginScreen({ navigation }) {
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <Button
                 title="Iniciar Sesión"
+                disabled={!validateLoginForm()}
                 onPress={handleLogin}
                 containerStyle={styles.button}
             />

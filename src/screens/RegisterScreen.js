@@ -7,26 +7,29 @@ import { auth } from '../config/firebase';
 export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    //nueva variable para verificar coincidencia
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState('');
 
     const handleRegister = async () => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-       //anadimos 2 validaciones
-        if (!email.includes("@")) {
+       
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#.$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+       
+        //verifica si corresponde al formato de email
+        if (!/\S+@\S+\.\S+/.test(email)) {
             setError("Por favor, ingresa un email válido.");
             return;
         }
-        //if (!passwordRegex.test(password)){
-           // setError("la contrasena no cumple las condiciones");
-          //  return;
-       // }
-        if(password!=password2){
-            setError("La contrasena no coincide");
+        //verifica la validacion de la contraseña
+        if (!passwordRegex.test(password)){
+            setError("La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial");
             return;
-
         }
-
+        // validacion de coincidencia de las claves
+        if(password!=password2){
+            setError("Las contraseñas no coinciden");
+            return;
+        }
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             navigation.replace('Home');
